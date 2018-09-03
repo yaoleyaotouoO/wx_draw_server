@@ -1,34 +1,30 @@
-const mqtt = require('mqtt');
-const client = mqtt.connect('wxs://0.0.0.0:7001');
+import * as ws from 'ws';
+import { WebSocket } from './app/websocket/websocket';
 
 module.exports = app => {
-    app.once('server', () => {
+    app.once('server', (server: any) => {
         // websocket
-        console.log("websocket start");
+        const WebSocketServer = ws.Server;
+        let wss = new WebSocketServer({
+            server: server
+        });
 
-        client.on('connect', () => {
-            client.subscribe('draw/drawClient');
-            client.publish('draw/drawServer', 'hello mqtt, my is Server');
-        })
+        app.wss = wss;
 
-        client.on('message', function (topic: string, message: string, packet: any) {
-            if (topic.indexOf('draw/drawClient') > -1) {
-                // 处理开锁信息，关闭连接
-                console.log("message: ", message);
-                console.log("packet: ", packet);
-                client.end();
-            }
-        })
+        wss.on('connection', (ws: any) => {
+            app.ws = ws;
+            new WebSocket(ws, wss);
+        });
     });
-app.on('error', () => {
-    // report error
-});
-app.on('request', () => {
-    // log receive request
-});
-app.on('response', () => {
-    // ctx.starttime is set by framework
-    // const used = Date.now() - ctx.starttime;
-    // log total cost
-});
+    app.on('error', () => {
+        // report error
+    });
+    app.on('request', () => {
+        // log receive request
+    });
+    app.on('response', () => {
+        // ctx.starttime is set by framework
+        // const used = Date.now() - ctx.starttime;
+        // log total cost
+    });
 };

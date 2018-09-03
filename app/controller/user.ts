@@ -2,7 +2,9 @@ import { Controller } from 'egg';
 
 export default class UserController extends Controller {
     async getUserInfo() {
-        const { ctx, service, logger } = this;
+        const { ctx, service, logger, app } = this;
+        console.log("XJX2222222222222222app: ", app.wss);
+
         const result = await service.user.getUserInfo();
 
         logger.info("xjx start! ");
@@ -31,5 +33,5 @@ export default class UserController extends Controller {
 
         ctx.body = result;
         ctx.status = 200;
-    }
+    } 
 }

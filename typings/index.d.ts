@@ -10,6 +10,8 @@ declare module 'egg' {
     // 扩展 app
     interface Application {
         mysql: IMysqlDto;
+        ws: any;
+        wss: any;
     }
 
     // 扩展 context

@@ -8,4 +8,6 @@ export default (app: Application) => {
     router.get('/api/getUserInfo', controller.user.getUserInfo);
 
     router.post('/api/login', controller.user.login);
+
+    router.get('/api/findRoom', controller.home.findRoom);
 };
