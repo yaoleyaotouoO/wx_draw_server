@@ -1,4 +1,6 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
+import * as path from 'path';
+import * as fs from 'fs';
 
 // for config.{env}.ts
 export type DefaultConfig = PowerPartial<EggAppConfig & BizConfig>;
@@ -7,6 +9,9 @@ export type DefaultConfig = PowerPartial<EggAppConfig & BizConfig>;
 export interface BizConfig {
     sourceUrl: string;
 }
+
+const filePath = path.join(__dirname, '../config.json');
+const mysqlConfig = JSON.parse(fs.readFileSync(filePath) as any);
 
 export default (appInfo: EggAppInfo) => {
     const config = {} as PowerPartial<EggAppConfig> & BizConfig;
@@ -20,15 +25,9 @@ export default (appInfo: EggAppInfo) => {
 
     // add your config here
     config.middleware = [];
-
+    
     config.mysql = {
-        client: {
-            host: '47.106.185.178',
-            port: '3306',
-            user: 'root',
-            password: 'Xjx13874731322',
-            database: 'draw',
-        },
+        client: mysqlConfig,
         // 是否加载到 app 上，默认开启
         app: true,
         // 是否加载到 agent 上，默认关闭
